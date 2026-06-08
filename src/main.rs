@@ -44,6 +44,7 @@ async fn async_main() -> anyhow::Result<()> {
         app
             .app_data(Data::new(pool.clone()))
             .wrap(Etag{force_strong_etag: true})
+            .service(web::arc::selector_map)
             .service(web::arc::signing_table)
             .service(web::arc::key_table)
     });

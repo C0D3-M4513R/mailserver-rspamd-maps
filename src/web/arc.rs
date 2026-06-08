@@ -9,6 +9,27 @@ static BASE64: data_encoding::Encoding = data_encoding_macro::new_encoding!{
     padding: '=',
 };
 
+#[actix_web::get("/selector_map")]
+pub async fn selector_map(db: Data<sqlx::postgres::PgPool>) -> HttpResponse {
+    let res = sqlx::query!(r#"
+SELECT public.flattened_domains.name as "name!", public.dkim.selector from dkim
+INNER JOIN public.flattened_domains ON public.dkim.domain_id = public.flattened_domains.id
+WHERE public.dkim.active"#)
+        .fetch_all(db.get_ref())
+        .await;
+
+    let res = match res {
+        Err(err) => {
+            log::error!("Error fetching DKIM: {err}");
+            return HttpResponse::with_body(StatusCode::INTERNAL_SERVER_ERROR, format!("Database error: {err}").boxed());
+        },
+        Ok(v) => v,
+    };
+
+    let res = String::from_iter(res.into_iter().map(|v|format!("{} {}\n", v.name, v.selector)));
+
+    HttpResponse::with_body(StatusCode::OK, res.boxed())
+}
 #[actix_web::get("/signing_table")]
 pub async fn signing_table(db: Data<sqlx::postgres::PgPool>) -> HttpResponse {
     let res = sqlx::query!(r#"
