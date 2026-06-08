@@ -1,0 +1,50 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\nSELECT public.flattened_domains.name as \"name!\", public.dkim.domain_id, public.dkim.selector from dkim\nINNER JOIN public.flattened_domains ON public.dkim.domain_id = public.flattened_domains.id\nWHERE public.dkim.active",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "name!",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "flattened_domains",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "domain_id",
+        "type_info": "Int8",
+        "origin": {
+          "Table": {
+            "table": "dkim",
+            "name": "domain_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "selector",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "dkim",
+            "name": "selector"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "1e139bf3e31508b03e8a253a785a3f3b6e208155a2a39d0e9a5c14a21d91fb26"
+}
