@@ -15,6 +15,7 @@ tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
 log = "0.4.32"
 
 data-encoding = { version = "2.11.0", features = ["alloc"] }
+data-encoding-macro = "0.1.20"
 
 actix-web = { version = "4.13.0", default-features = false, features = [
     "macros",
