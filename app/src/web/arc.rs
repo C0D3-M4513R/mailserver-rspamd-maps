@@ -2,12 +2,6 @@ use actix_web::http::StatusCode;
 use actix_web::HttpResponse;
 use actix_web::web::Data;
 
-//WHY a custom alphabet rspamd? WHY?!?
-static BASE64: data_encoding::Encoding = data_encoding_macro::new_encoding!{
-    symbols: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/",
-    padding: '=',
-};
-
 #[actix_web::routes]
 #[get("/selector_map")]
 #[head("/selector_map")]
@@ -75,7 +69,7 @@ WHERE public.dkim.active"#)
         Ok(v) => v,
     };
 
-    let res = String::from_iter(res.into_iter().map(|v|format!("{domain}-{selector} {domain}:{selector}:{}\n", BASE64.encode(v.private_key.as_slice()), domain=v.name, selector=v.selector)));
+    let res = String::from_iter(res.into_iter().map(|v|format!("{domain}-{selector} {domain}:{selector}:{}\n", data_encoding::BASE64.encode(v.private_key.as_slice()), domain=v.name, selector=v.selector)));
 
     HttpResponse::with_body(StatusCode::OK, res)
 }
