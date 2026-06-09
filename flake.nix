@@ -23,7 +23,7 @@
           rustc = rustVersion;
         };
 
-        manifest = (builtins.fromTOML (builtins.readFile ./Cargo.toml)).package;
+        manifest = (builtins.fromTOML (builtins.readFile ./app/Cargo.toml)).package;
 
         commonBuildInputs = with pkgs; [
           pkg-config

@@ -2,7 +2,6 @@ mod web;
 
 use std::net::IpAddr;
 use std::str::FromStr;
-use actix_middleware_etag::Etag;
 use actix_web::web::Data;
 
 fn main() -> anyhow::Result<()> {
@@ -40,11 +39,14 @@ async fn async_main() -> anyhow::Result<()> {
 
     let server = actix_web::HttpServer::new(move || {
         let app = actix_web::App::new();
+        let mut etag = etag::Etag::DEFAULT;
+        etag.force_strong_etag = |_| true;
+        let etag = etag;
 
         app
-            .app_data(Data::new(pool.clone()))
+            .wrap(etag)
             .wrap(actix_web::middleware::Logger::default())
-            .wrap(Etag{force_strong_etag: true})
+            .app_data(Data::new(pool.clone()))
             .service(web::arc::selector_map)
             .service(web::arc::signing_table)
             .service(web::arc::key_table)

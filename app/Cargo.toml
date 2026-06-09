@@ -1,0 +1,35 @@
+[package]
+name = "mailserver-rspamd-maps"
+version = "0.1.0"
+edition = "2024"
+
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(tokio_unstable)'] }
+
+[dependencies]
+dotenvy = "0.15.7"
+anyhow = "1.0.102"
+
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+log = "0.4.32"
+
+data-encoding = { version = "2.11.0", features = ["alloc"] }
+data-encoding-macro = "0.1.20"
+
+actix-web = { version = "4.13.0", default-features = false, features = [
+    "macros",
+    "http2",
+]}
+etag = {workspace = true}
+sqlx = { version = "0.9.0", features = ["runtime-tokio", "postgres"] }
+
+["cfg(tokio_unstable)".dependencies]
+console-subscriber = { version = "0.5.0" }
+
+[profile.dev]
+opt-level = 2
+
+[profile.release]
+lto = true
+strip = true
