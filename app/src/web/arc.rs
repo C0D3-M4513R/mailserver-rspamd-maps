@@ -75,7 +75,7 @@ WHERE public.dkim.active"#)
         Ok(v) => v,
     };
 
-    let res = String::from_iter(res.into_iter().map(|v|format!("{domain}-{selector} {domain} {selector} {}\n", BASE64.encode(v.private_key.as_slice()), domain=v.name, selector=v.selector)));
+    let res = String::from_iter(res.into_iter().map(|v|format!("{domain}-{selector} {domain}:{selector}:{}\n", BASE64.encode(v.private_key.as_slice()), domain=v.name, selector=v.selector)));
 
     HttpResponse::with_body(StatusCode::OK, res)
 }
