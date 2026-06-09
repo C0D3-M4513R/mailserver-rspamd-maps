@@ -47,7 +47,7 @@ WHERE public.dkim.active"#)
         Ok(v) => v,
     };
 
-    let res = String::from_iter(res.into_iter().map(|v|format!("*@{} {}-{}\n", v.name, v.domain_id, v.selector)));
+    let res = String::from_iter(res.into_iter().map(|v|format!("{} {}-{}\n", v.name, v.domain_id, v.selector)));
 
     HttpResponse::with_body(StatusCode::OK, res.boxed())
 }
